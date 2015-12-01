@@ -27,7 +27,7 @@
 // dreamoon_eval
 // ------------
 
-double dreamoon_eval (std::vector<char> drazil, std::vector<char> dreamoon)
+double dreamoon_eval (const std::vector<char>& drazil, const std::vector<char>& dreamoon)
 {
   // Compute drazil's final position
   int drazil_final_pos = 0;
@@ -39,7 +39,7 @@ double dreamoon_eval (std::vector<char> drazil, std::vector<char> dreamoon)
     }
   }
 
-  // Compute dreamoon's final position ignoring ?
+  // Compute dreamoon's partial position ignoring question marks
   int dreamoon_partial_pos = 0;
   int num_question_marks = 0;
   for (char c : dreamoon) {
@@ -52,28 +52,35 @@ double dreamoon_eval (std::vector<char> drazil, std::vector<char> dreamoon)
     }
   }
 
-  int num_combinations = 1 << num_question_marks;
+  // The number of paths
+  int num_paths = 1 << num_question_marks;
+
+  // The number of paths that get to the same final pos as drazil
   int num_success = 0;
 
-  for (int i = 0; i < num_combinations; ++i) {
-    int val = i;
+  // Enumerate the paths
+  for (int path = 0; path < num_paths; ++path) {
+
+    // Count the number of plusses in this path
+    int val = path;
     int num_plus = 0;
     for (int bit = 0; bit < num_question_marks; ++bit) {
-      if (val & 1) {
-	++num_plus;
-      }
+      if (val & 1) ++num_plus;
       val = val >> 1;
     }
 
+    // Determine dreammon's final position for this path
     int num_minus = num_question_marks - num_plus;
     int dreamoon_final_pos = dreamoon_partial_pos + num_plus - num_minus;
 
+    // Success if dreamoon's final pos is the same as drazil's final pos
     if (dreamoon_final_pos == drazil_final_pos) {
       ++num_success;
     }
   }
 
-  double prob = static_cast<double>(num_success) / num_combinations;
+  // Compute the probability of success
+  double prob = static_cast<double>(num_success) / num_paths;
 
   return prob;
 }

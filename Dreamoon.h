@@ -15,7 +15,7 @@
 // dreamoon_eval
 // ------------
 
-double dreamoon_eval (std::vector<char> drazil, std::vector<char> dreamoon);
+double dreamoon_eval (const std::vector<char>& drazil, const std::vector<char>& dreamoon);
 
 // -------------
 // dreamoon_print
